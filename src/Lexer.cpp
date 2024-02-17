@@ -19,7 +19,7 @@ std::vector<Token> Lexer::tokenize(std::string_view content)
     {
 
         auto ch = content[i];
-        size_t endPosition = i + 1;
+        size_t endPosition = i;
         bool found = find_comment(content, i, &endPosition);
         if (found)
         {
@@ -38,7 +38,7 @@ std::vector<Token> Lexer::tokenize(std::string_view content)
             column += offset + 1;
             continue;
         }
-        endPosition = i + 1;
+        endPosition = i;
         found = find_string(content, i, &endPosition);
         if (found)
         {
@@ -48,12 +48,12 @@ std::vector<Token> Lexer::tokenize(std::string_view content)
             column += offset + 1;
             continue;
         }
-        endPosition = i + 1;
+        endPosition = i;
         found = find_number(content, i, &endPosition);
         if (found)
         {
             int offset = endPosition - i;
-            tokens.push_back(Token{.lexical = content.substr(i, offset), .row = row, .col = column, .tokenType = TokenType::NUMBER});
+            tokens.push_back(Token{.lexical = content.substr(i, offset + 1), .row = row, .col = column, .tokenType = TokenType::NUMBER});
             i = endPosition;
             column += offset + 1;
             continue;
@@ -114,7 +114,8 @@ bool Lexer::find_number(std::string_view content, size_t start, size_t *endPosit
         *endPosition += 1;
         current = content[*endPosition];
     }
-    *endPosition -= 1;
+    if (current < '0' || current > '9')
+        *endPosition -= 1;
     return true;
 }
 

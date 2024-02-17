@@ -10,13 +10,13 @@ enum class Operator : char
 class BinaryOperationNode : public ASTNode
 {
 private:
-    std::shared_ptr<NumberNode> m_lhs;
-    std::shared_ptr<NumberNode> m_rhs;
+    std::shared_ptr<ASTNode> m_lhs;
+    std::shared_ptr<ASTNode> m_rhs;
     Operator m_operator;
 
 public:
-    BinaryOperationNode(Operator op, const std::shared_ptr<NumberNode> &lhs,
-                        const std::shared_ptr<NumberNode> &rhs);
+    BinaryOperationNode(Operator op, const std::shared_ptr<ASTNode> &lhs,
+                        const std::shared_ptr<ASTNode> &rhs);
     ~BinaryOperationNode() = default;
 
     void print() override;

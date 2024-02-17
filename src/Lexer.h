@@ -25,7 +25,7 @@ struct Token
 };
 
 inline auto possible_tokens = {
-    "dim", "print", "sub", "end", "input"};
+    "dim", "print", "sub", "end", "input", "local", "import"};
 
 class Lexer
 {

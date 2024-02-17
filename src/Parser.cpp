@@ -33,10 +33,13 @@ Token &Parser::next()
     }
     return current();
 }
-
+bool Parser::canConsume(TokenType tokenType)
+{
+    return m_tokens[m_current + 1].tokenType == tokenType;
+}
 bool Parser::consume(TokenType tokenType)
 {
-    if (m_tokens[m_current + 1].tokenType == tokenType)
+    if (canConsume(tokenType))
     {
         next();
         return true;
@@ -44,7 +47,7 @@ bool Parser::consume(TokenType tokenType)
     return false;
 }
 
-std::shared_ptr<ASTNode> Parser::parseToken(const Token &token)
+std::shared_ptr<ASTNode> Parser::parseToken(const Token &token, std::vector<std::shared_ptr<ASTNode>> nodes)
 {
     std::vector<std::shared_ptr<ASTNode>> args;
     switch (token.tokenType)
@@ -53,21 +56,10 @@ std::shared_ptr<ASTNode> Parser::parseToken(const Token &token)
     {
         auto value = std::atoll(token.lexical.data());
         auto lhs = std::make_shared<NumberNode>(value);
-        if (consume(TokenType::PLUS))
+        if (canConsume(TokenType::PLUS) || canConsume(TokenType::MINUS))
         {
-
-            if (consume(TokenType::NUMBER))
-            {
-                auto currentToken = current();
-                value = std::atoll(currentToken.lexical.data());
-                auto rhs = std::make_shared<NumberNode>(value);
-
-                return std::make_shared<BinaryOperationNode>(Operator::PLUS, lhs, rhs);
-            }
-            else
-            {
-                // error
-            }
+            auto op = parseToken(next(), {lhs});
+            return op;
         }
         return lhs;
         // check when ever the next token is a an operator
@@ -77,13 +69,19 @@ std::shared_ptr<ASTNode> Parser::parseToken(const Token &token)
         return std::make_shared<StringConstantNode>(token.lexical);
     }
     case TokenType::PLUS:
-        m_errors.push_back(ParserError{.file_name = "helloworld.yab", .token = token, .message = "token type '+' not yet implemented"});
-        break;
+    {
+        auto rhs = parseToken(next(), {});
+        auto lhs = nodes[0];
+        return std::make_shared<BinaryOperationNode>(Operator::PLUS, lhs, rhs);
+    }
     case TokenType::MINUS:
-        m_errors.push_back(ParserError{.file_name = "helloworld.yab", .token = token, .message = "token type '-' not yet implemented"});
-        break;
+    {
+        auto rhs = parseToken(next(), {});
+        auto lhs = nodes[0];
+        return std::make_shared<BinaryOperationNode>(Operator::MINUS, lhs, rhs);
+    }
     default:
-        m_errors.push_back(ParserError{.file_name = "helloworld.yab", .token = token, .message = "token type '?' not yet implemented"});
+        m_errors.push_back(ParserError{.file_name = "helloworld.yab", .token = token, .message = std::string("token type '" + std::string(token.lexical) + "' not yet implemented")});
         break;
     }
     return nullptr;
@@ -96,7 +94,7 @@ void Parser::parseKeyWord(const Token &currentToken, std::vector<std::shared_ptr
         Token token = next();
         while (token.tokenType != TokenType::ENDLINE && token.tokenType != TokenType::T_EOF && hasNext())
         {
-            args.push_back(parseToken(token));
+            args.push_back(parseToken(token, {}));
             token = next();
         }
 

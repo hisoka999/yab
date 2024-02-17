@@ -2,8 +2,8 @@
 #include <iostream>
 #include "interpreter/Stack.h"
 
-BinaryOperationNode::BinaryOperationNode(Operator op, const std::shared_ptr<NumberNode> &lhs,
-                                         const std::shared_ptr<NumberNode> &rhs) : ASTNode(), m_lhs(lhs), m_rhs(rhs), m_operator(op)
+BinaryOperationNode::BinaryOperationNode(Operator op, const std::shared_ptr<ASTNode> &lhs,
+                                         const std::shared_ptr<ASTNode> &rhs) : ASTNode(), m_lhs(lhs), m_rhs(rhs), m_operator(op)
 {
 }
 
@@ -20,5 +20,13 @@ void BinaryOperationNode::eval(Stack &stack)
     m_rhs->eval(stack);
     auto lhs = stack.pop_front<int64_t>();
     auto rhs = stack.pop_front<int64_t>();
-    stack.push_back(lhs + rhs);
+    switch (m_operator)
+    {
+    case Operator::PLUS:
+        stack.push_back(lhs + rhs);
+        break;
+    case Operator::MINUS:
+        stack.push_back(lhs - rhs);
+        break;
+    }
 }

@@ -37,6 +37,10 @@ int main(int args, char **argv)
     Lexer lexer;
 
     auto tokens = lexer.tokenize(std::string_view{buffer});
+    // for (auto &token : tokens)
+    // {
+    //     std::cout << "token: " << token.lexical << " tokentype: " << static_cast<int>(token.tokenType) << "\n";
+    // }
     Parser parser(tokens);
     auto asts = parser.parseTokens();
     if (parser.hasError())

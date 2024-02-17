@@ -21,7 +21,8 @@ private:
     Token &current();
     bool hasNext();
     bool consume(TokenType tokenType);
-    std::shared_ptr<ASTNode> parseToken(const Token &token);
+    bool canConsume(TokenType tokenType);
+    std::shared_ptr<ASTNode> parseToken(const Token &token, std::vector<std::shared_ptr<ASTNode>> nodes);
     void parseKeyWord(const Token &currentToken, std::vector<std::shared_ptr<ASTNode>> &nodes);
 
 public:
