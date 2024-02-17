@@ -1,0 +1,5 @@
+rem Dies ist ein kommentar
+print "Hello World"
+print 555 + 22
+rem noch ein kommentar
+print "Wie geht es euch "
