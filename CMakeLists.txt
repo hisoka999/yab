@@ -15,6 +15,12 @@ file(GLOB SRC
     src/ast/NumberNode.cpp
     src/ast/StringConstantNode.cpp
     src/ast/BinaryOperationNode.cpp
+    src/ast/InputNode.cpp
+    src/ast/ComparrisionNode.cpp
+    src/ast/VariableAccessNode.cpp
+    src/ast/LogicalExpressionNode.cpp
+    src/ast/IfConditionNode.cpp
+    src/ast/VariableAssignmentNode.cpp
     src/interpreter/Stack.cpp
     src/Lexer.cpp
     src/Parser.cpp

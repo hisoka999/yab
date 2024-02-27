@@ -7,10 +7,14 @@ enum class TokenType
     NUMBER,
     STRING,
     KEYWORD,
+    NAMEDTOKEN,
     PLUS,
     MINUS,
     LEFT_CURLY,
     RIGHT_CURLY,
+    EQUAL,
+    GREATER,
+    LESS,
     ENDLINE,
     T_EOF
 
@@ -25,12 +29,14 @@ struct Token
 };
 
 inline auto possible_tokens = {
-    "dim", "print", "sub", "end", "input", "local", "import"};
+    "dim", "print", "sub", "end", "input", "local", "import", "error", "if", "not", "and"};
 
 class Lexer
 {
 private:
     bool find_fixed_token(std::string_view content, size_t start, size_t *endPosition);
+    bool find_token(std::string_view content, size_t start, size_t *endPosition);
+
     bool find_string(std::string_view content, size_t start, size_t *endPosition);
     bool find_number(std::string_view content, size_t start, size_t *endPosition);
     bool find_comment(std::string_view content, size_t start, size_t *endPosition);

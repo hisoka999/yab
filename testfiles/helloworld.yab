@@ -1,5 +1,8 @@
-rem Dies ist ein kommentar
+//import std
+rem Dies ist ein kommentar "asdasd"
 print "Hello World"
 print 555 + 22 -7
 rem noch ein kommentar
+// asdasdasd
+
 print "Wie geht es euch "

@@ -1,0 +1,7 @@
+input "Please enter a number between 1 and 10: " a
+
+rem   Assigning the result of a comparison to a variable
+okay=a>=1 and a<=10
+
+rem   Use a variable within an if-statement
+if (not okay) error "Wrong, wrong !"

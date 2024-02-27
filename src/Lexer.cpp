@@ -38,6 +38,17 @@ std::vector<Token> Lexer::tokenize(std::string_view content)
             column += offset + 1;
             continue;
         }
+
+        found = find_token(content, i, &endPosition);
+        if (found)
+        {
+            int offset = endPosition - i;
+            tokens.push_back(Token{.lexical = content.substr(i, offset + 1), .row = row, .col = column, .tokenType = TokenType::NAMEDTOKEN});
+            i = endPosition;
+            column += offset + 1;
+            continue;
+        }
+
         endPosition = i;
         found = find_string(content, i, &endPosition);
         if (found)
@@ -77,6 +88,15 @@ std::vector<Token> Lexer::tokenize(std::string_view content)
             break;
         case ')':
             tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::RIGHT_CURLY});
+            break;
+        case '=':
+            tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::EQUAL});
+            break;
+        case '<':
+            tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::LESS});
+            break;
+        case '>':
+            tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::GREATER});
             break;
         default:
             break;
@@ -119,6 +139,27 @@ bool Lexer::find_number(std::string_view content, size_t start, size_t *endPosit
     return true;
 }
 
+bool Lexer::find_token(std::string_view content, size_t start, size_t *endPosition)
+{
+    char current = content[start];
+    *endPosition = start + 1;
+    if (current < 'A' || current > 'z')
+        return false;
+
+    while (current >= 'A' && current <= 'z')
+    {
+
+        *endPosition += 1;
+        current = content[*endPosition];
+    }
+    while (current < 'A' || current > 'z')
+    {
+        *endPosition -= 1;
+        current = content[*endPosition];
+    }
+    return true;
+}
+
 bool Lexer::find_fixed_token(std::string_view content, size_t start, size_t *endPosition)
 {
 
@@ -146,15 +187,31 @@ bool Lexer::find_fixed_token(std::string_view content, size_t start, size_t *end
 
 bool Lexer::find_comment(std::string_view content, size_t start, size_t *endPosition)
 {
-    if (content.substr(start, 3) != "rem")
-        return false;
-    char current = content[start];
-    *endPosition = start + 3;
-
-    while (current != '\n')
+    if (content.substr(start, 3) == "rem")
     {
-        *endPosition += 1;
-        current = content[*endPosition];
+        char current = content[start];
+        *endPosition = start + 3;
+
+        while (current != '\n' && current != 0)
+        {
+            *endPosition += 1;
+            current = content[*endPosition];
+        }
+        *endPosition -= 1;
+        return true;
     }
-    return true;
+    else if (content.substr(start, 2) == "//")
+    {
+        char current = content[start];
+        *endPosition = start + 2;
+
+        while (current != '\n' && current != 0)
+        {
+            *endPosition += 1;
+            current = content[*endPosition];
+        }
+        *endPosition -= 1;
+        return true;
+    }
+    return false;
 }

@@ -5,6 +5,8 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "interpreter/Stack.h"
+#include <filesystem>
+
 using namespace std::literals;
 
 int main(int args, char **argv)
@@ -22,6 +24,12 @@ int main(int args, char **argv)
     std::istringstream is;
     std::string s;
     std::string group;
+    std::filesystem::path file_path(argv[1]);
+    if (!std::filesystem::exists(file_path))
+    {
+        std::cerr << "the first argument is not a valid input file\n";
+        return 1;
+    }
 
     file.open(argv[1], std::ios::in);
     if (!file.is_open())
@@ -41,17 +49,17 @@ int main(int args, char **argv)
     // {
     //     std::cout << "token: " << token.lexical << " tokentype: " << static_cast<int>(token.tokenType) << "\n";
     // }
-    Parser parser(tokens);
+    Parser parser(file_path, tokens);
     auto asts = parser.parseTokens();
     if (parser.hasError())
     {
         parser.printErrors();
         return 1;
     }
-    // for (auto &ast : asts)
-    // {
-    //     ast->print();
-    // }
+    for (auto &ast : asts)
+    {
+        ast->print();
+    }
     Stack stack;
     for (auto &ast : asts)
     {
