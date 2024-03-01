@@ -28,5 +28,8 @@ void BinaryOperationNode::eval(Stack &stack)
     case Operator::MINUS:
         stack.push_back(lhs - rhs);
         break;
+    case Operator::MUL:
+        stack.push_back(lhs * rhs);
+        break;
     }
 }

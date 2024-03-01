@@ -20,10 +20,12 @@ private:
     std::vector<Token> m_tokens;
     std::vector<ParserError> m_errors;
     std::vector<std::string_view> m_known_variable_names;
+    std::vector<std::string> m_known_function_names;
     Token &next();
     Token &current();
     bool hasNext();
     bool consume(TokenType tokenType);
+    void tryConsume(TokenType tokenType);
     bool canConsume(TokenType tokenType);
     std::shared_ptr<ASTNode> parseToken(const Token &token, std::vector<std::shared_ptr<ASTNode>> nodes);
     void parseKeyWord(const Token &currentToken, std::vector<std::shared_ptr<ASTNode>> &nodes);

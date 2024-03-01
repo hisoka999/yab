@@ -1,0 +1,25 @@
+dim words$(4)
+for i=1 to 4
+  read words$(i)
+next i
+
+print_words(words$())
+upcase_words(words$())
+print_words(words$())
+
+sub print_words(w$())
+  local i
+  for i=1 to arraysize(w$(),1)
+    print w$(i)," ";
+  next i
+  print    
+end sub
+
+sub upcase_words(w$())
+  local i
+  for i=1 to arraysize(w$(),1)
+    w$(i) = upper$(w$(i))
+  next i
+end sub
+
+data "case","does","not","matter"

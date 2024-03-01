@@ -83,6 +83,12 @@ std::vector<Token> Lexer::tokenize(std::string_view content)
         case '-':
             tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::MINUS});
             break;
+        case '*':
+            tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::MUL});
+            break;
+        case '/':
+            tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::DIV});
+            break;
         case '(':
             tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::LEFT_CURLY});
             break;
@@ -98,6 +104,8 @@ std::vector<Token> Lexer::tokenize(std::string_view content)
         case '>':
             tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::GREATER});
             break;
+        case ',':
+            tokens.push_back(Token{.lexical = content.substr(i, 1), .row = row, .col = column, .tokenType = TokenType::COMMA});
         default:
             break;
         }
@@ -142,7 +150,7 @@ bool Lexer::find_number(std::string_view content, size_t start, size_t *endPosit
 bool Lexer::find_token(std::string_view content, size_t start, size_t *endPosition)
 {
     char current = content[start];
-    *endPosition = start + 1;
+    *endPosition = start;
     if (current < 'A' || current > 'z')
         return false;
 

@@ -1,4 +1,5 @@
 #include "Stack.h"
+#include "ast/FunctionDefinitionNode.h"
 
 Stack::Stack() : data(), stackPointer(0)
 {
@@ -49,4 +50,18 @@ void Stack::set_var(std::string &varName, const std::string_view &value)
 StackObject Stack::get_var(const std::string &varName)
 {
     return m_variables[varName];
+}
+
+void Stack::addFunction(std::shared_ptr<FunctionDefinitionNode> &function)
+{
+    m_functions[function->name()] = function;
+}
+void Stack::addFunction(FunctionDefinitionNode *function)
+{
+    m_functions[function->name()] = std::shared_ptr<FunctionDefinitionNode>(function);
+}
+
+std::shared_ptr<FunctionDefinitionNode> &Stack::getFunction(const std::string &name)
+{
+    return m_functions.at(name);
 }

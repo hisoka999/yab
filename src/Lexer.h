@@ -10,13 +10,16 @@ enum class TokenType
     NAMEDTOKEN,
     PLUS,
     MINUS,
+    DIV,
+    MUL,
     LEFT_CURLY,
     RIGHT_CURLY,
     EQUAL,
     GREATER,
     LESS,
     ENDLINE,
-    T_EOF
+    T_EOF,
+    COMMA,
 
 };
 
@@ -29,7 +32,7 @@ struct Token
 };
 
 inline auto possible_tokens = {
-    "dim", "print", "sub", "end", "input", "local", "import", "error", "if", "not", "and"};
+    "dim", "print", "sub", "end", "input", "local", "import", "error", "if", "else", "not", "and", "return"};
 
 class Lexer
 {

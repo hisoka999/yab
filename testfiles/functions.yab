@@ -1,0 +1,16 @@
+import std
+
+sub callop(op,a,b)
+    if (op = "add")
+        return add(a,b)
+    else
+        return mul(a,b)
+    end if
+end sub
+
+x = 4
+print add(1,3)
+print mul(x,5)
+
+print callop("add",2,x)
+print callop("mul",x,x)

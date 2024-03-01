@@ -4,7 +4,8 @@
 enum class Operator : char
 {
     PLUS = '+',
-    MINUS = '-'
+    MINUS = '-',
+    MUL = '*'
 };
 
 class BinaryOperationNode : public ASTNode
